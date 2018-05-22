@@ -1,0 +1,55 @@
+{% extends 'base_app/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container">
+    {% if msg  %}
+        <p>{{msg}}</p>
+    {% endif %}
+
+    {% if not finish  %}
+        {% if correct_answers %}
+            <p>{{correct_answers}}</p>
+        {% endif %}
+
+        <br>
+
+        <form action="{% url 'qanda_app:action' %}" id='check_form_id' method="post">
+            {% csrf_token %}
+            <div class="form_control">
+                {{ question_form.question_field }}
+                <br>
+                {% for answer in answers %}
+                    {% if q_next %}
+                        <input type="checkbox" name="checks" value="{{answer}}" disabled> {{answer}}<br>
+                    {% else %}
+                        <input type="checkbox" name="checks" value="{{answer}}"> {{answer}}<br>
+                    {% endif %}
+                {% endfor %}
+
+                <br>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        {% if q_next %}
+                            <button type="submit" name="check" class="btn" disabled>Check</button>
+                        {% else %}
+                            <button type="submit" name="check" class="btn">Check</button>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-2">
+                        {% if q_next %}
+                            <button type="submit" name="next" class="btn">Next</button>
+                        {% else %}
+                            <button type="submit" name="next" class="btn" disabled>Next</button>
+                        {% endif%}
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+</div>
+
+{% endblock content %}
